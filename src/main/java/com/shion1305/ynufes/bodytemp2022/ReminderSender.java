@@ -9,9 +9,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 @WebListener
 public class ReminderSender implements ServletContextListener {
+
+    static Logger logger = Logger.getLogger("TempInputReminder");
     /*
     Schedule at next 07:00
      */
@@ -30,7 +33,9 @@ public class ReminderSender implements ServletContextListener {
         }
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.SECOND, 0);
         Date d = calendar.getTime();
+        logger.info("Scheduled at " + d);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
