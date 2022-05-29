@@ -40,6 +40,7 @@ public class ReminderSender implements ServletContextListener {
             @Override
             public void run() {
                 MessageSender.broadcastReminder();
+                logger.info("The scheduled reminder has been broadcasted");
                 schedule();
             }
         }, d);

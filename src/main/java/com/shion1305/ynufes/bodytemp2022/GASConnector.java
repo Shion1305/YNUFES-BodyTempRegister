@@ -35,11 +35,9 @@ public class GASConnector {
     private int sendRequest(String req) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) URI.create(req).toURL().openConnection();
         connection.setRequestMethod("GET");
-        System.out.println(req);
         connection.connect();
         ObjectMapper mapper = new ObjectMapper();
         GasResponse response = mapper.readValue(connection.getInputStream(), GasResponse.class);
-        System.out.println(response.code);
         return response.code;
     }
 }

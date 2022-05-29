@@ -5,10 +5,12 @@ import com.shion1305.ynufes.bodytemp2022.message.MessageSender;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class UserHandler {
+    private static final Logger logger = Logger.getLogger("UserHandler");
     private static final Preferences preferences;
     private final static String urlString = ConfigManager.getConfig("GASUrl");
     static URL url;
@@ -51,6 +53,7 @@ public class UserHandler {
             return;
         }
         int result = connector.register(name, temp);
+        logger.info(String.format("%s(%s) requested to register temp, result was %d", name, userId, result));
         switch (result) {
             case 202:
                 MessageSender.tempSuccess(temp, name, token);
