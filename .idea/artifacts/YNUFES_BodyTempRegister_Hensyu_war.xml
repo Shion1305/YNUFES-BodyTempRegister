@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="YNUFES-BodyTempRegister-Hensyu:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/YNUFES_BodyTempRegister_Hensyu_war</output-path>
+    <root id="archive" name="YNUFES-BodyTempRegister-Hensyu_war.war">
+      <element id="artifact" artifact-name="YNUFES-BodyTempRegister-Hensyu:war exploded" />
+    </root>
+  </artifact>
+</component>
