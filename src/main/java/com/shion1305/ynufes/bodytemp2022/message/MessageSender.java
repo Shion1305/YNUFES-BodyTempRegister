@@ -18,8 +18,8 @@ public class MessageSender {
     public enum ErrorType {InvalidFormat, NAME_NOT_FOUND, INVALID_TEMP_FORMAT, SERVER_ERROR, ERROR_UNKNOWN}
 
     public static void sendWelcomeMessage(String token) {
-        Text title = createLabel("体温入力BOTへようこそ", false);
-        Text description = createLabel("SpreadSheet上に登録されているあなたの名前を入力してください。", false);
+        Text title = createLabel("体温入力BOTへようこそ", true);
+        Text description = createLabel("まずはじめに\nSpreadSheet上に登録されているあなたの名前を入力してください。", false);
         Box mainBox = Box.builder().layout(FlexLayout.VERTICAL)
                 .contents(title, description).spacing(FlexMarginSize.SM).build();
         LineMessageSender.reply(new ReplyMessage(token, FlexMessage.builder()
