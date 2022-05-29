@@ -96,4 +96,16 @@ public class MessageSender {
     static Text createLabel(String s, boolean bold) {
         return Text.builder().text(s).weight(bold ? Text.TextWeight.BOLD : Text.TextWeight.REGULAR).wrap(true).build();
     }
+
+    public static void broadcastReminder() {
+        Box b = Box.builder()
+                .layout(FlexLayout.VERTICAL)
+                .contents(createLabel("検温忘れずに!", true), createLabel("検温しましょう!このチャットに体温を送信してください!(例:36.4)", false)).build();
+        Bubble bubble = Bubble.builder().body(b).build();
+        FlexMessage message = FlexMessage.builder()
+                .contents(bubble)
+                .altText("検温リマインダー")
+                .build();
+        LineMessageSender.broadcast(message);
+    }
 }

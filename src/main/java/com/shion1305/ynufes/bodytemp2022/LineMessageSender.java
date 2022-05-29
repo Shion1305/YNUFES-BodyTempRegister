@@ -1,7 +1,9 @@
 package com.shion1305.ynufes.bodytemp2022;
 
 import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.model.Broadcast;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.response.BotApiResponse;
 
 import java.util.concurrent.ExecutionException;
@@ -15,6 +17,13 @@ public class LineMessageSender {
         client = LineMessagingClient.builder(ConfigManager.getConfig("BotToken")).build();
     }
 
+    public static void broadcast(Message message){
+        try {
+            client.broadcast(new Broadcast(message)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static void reply(ReplyMessage message) {
         try {
             BotApiResponse response = client.replyMessage(message).get(30, TimeUnit.SECONDS);
