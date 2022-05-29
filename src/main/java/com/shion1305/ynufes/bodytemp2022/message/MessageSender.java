@@ -13,8 +13,11 @@ import com.shion1305.ynufes.bodytemp2022.LineMessageSender;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class MessageSender {
+    private static final Logger logger = Logger.getLogger("MessageSender");
+
     public enum ErrorType {InvalidFormat, NAME_NOT_FOUND, INVALID_TEMP_FORMAT, SERVER_ERROR, ERROR_UNKNOWN}
 
     public static void sendWelcomeMessage(String token) {
@@ -85,6 +88,7 @@ public class MessageSender {
             default:
                 mes = "不明のエラーが発生しました。";
         }
+        logger.info("ERROR, " + t.name() + ", " + mes);
         Text title = createLabel("エラー", true);
         Text content = createLabel(mes, false);
         Box box = Box.builder().contents(title, content).layout(FlexLayout.VERTICAL).build();

@@ -15,10 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 
 @WebServlet("/line")
 public class LineEndpointReceiver extends HttpServlet {
+    private static Logger logger = Logger.getLogger("LineEndpointReceiver");
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebhookParser parser = new WebhookParser(new SignatureValidator() {
@@ -47,6 +50,7 @@ public class LineEndpointReceiver extends HttpServlet {
             MessageContent mes = ((MessageEvent<?>) e).getMessage();
             if (mes instanceof TextMessageContent) {
                 String message = ((TextMessageContent) mes).getText();
+                logger.info(String.format("Received message from %s, content: %s", mes,message));
                 UserHandler.processRequest(message, e.getSource().getUserId(), token);
             } else {
                 MessageSender.sendError(MessageSender.ErrorType.InvalidFormat, token);

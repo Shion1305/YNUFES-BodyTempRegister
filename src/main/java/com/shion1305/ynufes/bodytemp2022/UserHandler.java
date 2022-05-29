@@ -38,16 +38,18 @@ public class UserHandler {
         //avoid injection
         if (in.contains("&") || in.length() > 10)
             MessageSender.sendError(MessageSender.ErrorType.NAME_NOT_FOUND, token);
+        logger.info(String.format("%s tried to register name %s", userId,in));
         if (connector.check(in)) {
             preferences.put(userId, in);
             preferences.flush();
+            logger.info(String.format("%s registered its name %s", userId, in));
             MessageSender.nameSuccess(in, token);
         } else {
             MessageSender.sendError(MessageSender.ErrorType.NAME_NOT_FOUND, token);
         }
     }
 
-    private static void registerTemp(String temp, String name, String token, String userId) throws IOException {
+    private static void registerTemp(String temp, String name, String token, String userId) throws IOException, BackingStoreException {
         if (!temp.matches("^[34]\\d\\.\\d$")) {
             MessageSender.sendError(MessageSender.ErrorType.INVALID_TEMP_FORMAT, token);
             return;
@@ -61,6 +63,7 @@ public class UserHandler {
             case 404:
                 MessageSender.sendError(MessageSender.ErrorType.NAME_NOT_FOUND, token);
                 preferences.remove(userId);
+                preferences.flush();
                 break;
             case 500:
                 MessageSender.sendError(MessageSender.ErrorType.SERVER_ERROR, token);
