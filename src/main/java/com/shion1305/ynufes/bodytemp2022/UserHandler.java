@@ -38,8 +38,8 @@ public class UserHandler {
         //avoid injection
         if (in.contains("&") || in.length() > 10)
             MessageSender.sendError(MessageSender.ErrorType.NAME_NOT_FOUND, token);
-        logger.info(String.format("%s tried to register name %s", userId,in));
-        if (connector.check(in)) {
+        logger.info(String.format("%s tried to register name %s", userId, in));
+        if (connector.checkName(in)) {
             preferences.put(userId, in);
             preferences.flush();
             logger.info(String.format("%s registered its name %s", userId, in));
@@ -71,5 +71,18 @@ public class UserHandler {
             default:
                 MessageSender.sendError(MessageSender.ErrorType.ERROR_UNKNOWN, token);
         }
+    }
+
+    public static void checkNoSubmission() throws BackingStoreException, IOException {
+        logger.info("Checking submission status...");
+        for (String userID : preferences.keys()) {
+            String name = preferences.get(userID, null);
+            if (name == null) continue;
+            String result = connector.checkRecord(name);
+            if (result == null || !result.equals("")) continue;
+            logger.info(String.format("Sending Late reminder to %s(%s)", name, userID));
+            MessageSender.sendLateReminder(userID);
+        }
+        logger.info("All submission status checks are finished.");
     }
 }

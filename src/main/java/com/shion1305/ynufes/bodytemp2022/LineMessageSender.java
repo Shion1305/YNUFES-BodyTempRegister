@@ -2,9 +2,9 @@ package com.shion1305.ynufes.bodytemp2022;
 
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.Broadcast;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.message.Message;
-import com.linecorp.bot.model.response.BotApiResponse;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -34,5 +34,9 @@ public class LineMessageSender {
             logger.severe("ERROR in sending Message");
             e.printStackTrace();
         }
+    }
+
+    public static void push(PushMessage message) {
+        client.pushMessage(message);
     }
 }

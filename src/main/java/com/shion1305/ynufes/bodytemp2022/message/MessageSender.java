@@ -1,5 +1,6 @@
 package com.shion1305.ynufes.bodytemp2022.message;
 
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
@@ -111,5 +112,21 @@ public class MessageSender {
                 .altText("検温リマインダー")
                 .build();
         LineMessageSender.broadcast(message);
+    }
+
+    public static void sendLateReminder(String userID) {
+        Box b = Box.builder()
+                .layout(FlexLayout.VERTICAL)
+                .spacing(FlexMarginSize.SM)
+                .contents(createLabel("入力を忘れていませんか?", true),
+                        createLabel("検温入力が御済みでないようです!忘れずに入力しましょう!", false))
+                .build();
+        Bubble bubble = Bubble.builder()
+                .body(b)
+                .build();
+        FlexMessage message = FlexMessage.builder()
+                .contents(bubble)
+                .altText("検温入力忘れていませんか?").build();
+        LineMessageSender.push(new PushMessage(userID, message));
     }
 }
