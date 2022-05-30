@@ -22,7 +22,7 @@ function process(e) {
     const indexD = searchRowForDate(d.getMonth() + 1, d.getDate());
     if (indexD === -1) return respond({code: 500});
     const cell = c.getRange(indexD, indexN + 1);
-    const oldV = cell.getValue();
+    const oldV = String(cell.getValue());
     if (e.parameter.type === "check") return respond({currentValue: oldV, code: 200});
     cell.setValue(e.parameter.temp);
     return respond({code: 202, oldValue: oldV});
