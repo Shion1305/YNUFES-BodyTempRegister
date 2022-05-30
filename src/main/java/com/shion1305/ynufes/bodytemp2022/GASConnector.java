@@ -15,11 +15,21 @@ public class GASConnector {
         this.url = url;
     }
 
-    public boolean check(String name) throws IOException {
+    public boolean checkName(String name) throws IOException {
+        GasResponse resp = check(name);
+        return resp.code == 200;
+    }
+
+    public GasResponse check(String name) throws IOException {
         StringBuilder requestUrl = new StringBuilder(url);
         requestUrl.append("?type=check&name=");
         requestUrl.append(URLEncoder.encode(name, StandardCharsets.UTF_8));
-        return sendRequest(requestUrl.toString()) == 200;
+        return sendRequest(requestUrl.toString());
+    }
+
+    public String checkRecord(String name) throws IOException {
+        GasResponse resp = check(name);
+        return resp.currentValue;
     }
 
     public int register(String name, String bodyTemp) throws IOException {
@@ -29,15 +39,14 @@ public class GASConnector {
         requestUrl.append('&');
         requestUrl.append("temp=");
         requestUrl.append(bodyTemp);
-        return sendRequest(requestUrl.toString());
+        return sendRequest(requestUrl.toString()).code;
     }
 
-    private int sendRequest(String req) throws IOException {
+    private GasResponse sendRequest(String req) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) URI.create(req).toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.connect();
         ObjectMapper mapper = new ObjectMapper();
-        GasResponse response = mapper.readValue(connection.getInputStream(), GasResponse.class);
-        return response.code;
+        return mapper.readValue(connection.getInputStream(), GasResponse.class);
     }
 }
