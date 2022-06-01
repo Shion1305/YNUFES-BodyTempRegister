@@ -12,7 +12,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class RequestProcessor {
-    private static final Logger logger = Logger.getLogger("UserHandler");
+    private final Logger logger;
     private final Preferences preferences;
     private final String name;
     private final GASConnector connector;
@@ -20,6 +20,7 @@ public class RequestProcessor {
     private final LineMessageSender sender;
 
     public RequestProcessor(String url, String name, String botToken) {
+        this.logger = Logger.getLogger("RequestProcessor: " + name);
         this.name = name;
         connector = new GASConnector(url);
         preferences = Preferences.userRoot().node("ynufes-bodytemp").node(name);
