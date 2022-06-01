@@ -18,12 +18,14 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 
-@WebServlet("/line")
+@WebServlet("/line/*")
 public class LineEndpointReceiver extends HttpServlet {
     private static Logger logger = Logger.getLogger("LineEndpointReceiver");
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String url = req.getServletPath();
+        String reqName = url.substring(url.indexOf('/') + 1);
         WebhookParser parser = new WebhookParser(new SignatureValidator() {
             @Override
             public boolean validateSignature(byte[] content, String headerSignature) {
