@@ -27,10 +27,12 @@ import java.util.logging.Logger;
 
 public class LineMessageSender {
     private static final Logger logger = Logger.getLogger("MessageSender");
+    private final String processName;
     private final LineMessagingClient client;
 
-    public LineMessageSender(String token) {
-        this.client = LineMessagingClient.builder(token).build();
+    public LineMessageSender(String processName, String botToken) {
+        this.processName = processName;
+        this.client = LineMessagingClient.builder(botToken).build();
     }
 
     private void broadcast(Message message) {
@@ -45,7 +47,7 @@ public class LineMessageSender {
         try {
             client.replyMessage(message).get(30, TimeUnit.SECONDS);
         } catch (ExecutionException | TimeoutException | InterruptedException e) {
-            logger.severe("ERROR in sending Message");
+            logger.severe(String.format("[%s]ERROR in sending Message", processName));
             e.printStackTrace();
         }
     }
@@ -124,7 +126,7 @@ public class LineMessageSender {
             default:
                 mes = "不明のエラーが発生しました。";
         }
-        logger.info("ERROR, " + t.name() + ", " + mes);
+        logger.info(String.format("[%s]ERROR, %s, %s", processName, t.name(), mes));
         Text title = createLabel("エラー", true);
         Text content = createLabel(mes, false);
         Box box = Box.builder().contents(title, content).layout(FlexLayout.VERTICAL).build();
@@ -147,6 +149,7 @@ public class LineMessageSender {
                 .altText("検温リマインダー")
                 .build();
         broadcast(message);
+        logger.info(String.format("[%s]Reminder broadcasted", processName));
     }
 
     public void sendLateReminder(String userID) {

@@ -2,10 +2,10 @@
   <artifact type="exploded-war" build-on-make="true" name="YNUFES-BodyTempRegister-Hensyu:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/YNUFES_BodyTempRegister_Hensyu_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="YNUFES-BodyTempRegister-Hensyu/web/Web" />
+      <element id="javaee-facet-resources" facet="YNUFES-BodyTempRegister/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="YNUFES-BodyTempRegister-Hensyu" />
+          <element id="module-output" name="YNUFES-BodyTempRegister" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="javax.servlet.api" />

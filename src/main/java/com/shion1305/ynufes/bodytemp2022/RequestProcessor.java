@@ -18,21 +18,21 @@ import java.util.prefs.Preferences;
 public class RequestProcessor {
     private final Logger logger;
     private final Preferences preferences;
-    private final String name;
+    private final String processName;
     private final GASConnector connector;
 
     private final LineMessageSender sender;
 
-    public RequestProcessor(String url, String name, String botToken) {
-        this.logger = Logger.getLogger("RequestProcessor: " + name);
-        this.name = name;
+    public RequestProcessor(String url, String processName, String botToken) {
+        this.logger = Logger.getLogger("RequestProcessor{" + processName + "}");
+        this.processName = processName;
         connector = new GASConnector(url);
-        preferences = Preferences.userRoot().node("ynufes-bodytemp").node(name);
-        sender = new LineMessageSender(botToken);
+        preferences = Preferences.userRoot().node("ynufes-bodytemp").node(processName);
+        sender = new LineMessageSender(processName, botToken);
     }
 
     public void processRequest(String in, String userId, String token) throws BackingStoreException, IOException {
-        logger.info(String.format("Received message from %s|%s, content: %s", name, userId, in));
+        logger.info(String.format("[%s]Received message from %s, content: %s", processName, userId, in));
         String name = preferences.get(userId, null);
         if (name == null) {
             registerName(in, userId, token);
@@ -45,11 +45,11 @@ public class RequestProcessor {
         //avoid injection
         if (in.contains("&") || in.length() > 10)
             sender.sendError(LineMessageSender.ErrorType.NAME_NOT_FOUND, token);
-        logger.info(String.format("%s tried to register name %s", userId, in));
+        logger.info(String.format("[%s]%s tried to register name %s", processName, userId, in));
         if (connector.checkName(in)) {
             preferences.put(userId, in);
             preferences.flush();
-            logger.info(String.format("%s registered its name %s", userId, in));
+            logger.info(String.format("[%s]%s registered its name %s", processName, userId, in));
             sender.nameSuccess(in, token);
         } else {
             sender.sendError(LineMessageSender.ErrorType.NAME_NOT_FOUND, token);
@@ -62,7 +62,7 @@ public class RequestProcessor {
             return;
         }
         int result = connector.register(name, temp);
-        logger.info(String.format("%s(%s) requested to register temp, result was %d", name, userId, result));
+        logger.info(String.format("[%s]%s(%s) requested to register temp, result was %d", processName, name, userId, result));
         switch (result) {
             case 202:
                 sender.tempSuccess(temp, name, token);
@@ -81,7 +81,7 @@ public class RequestProcessor {
     }
 
     public void checkNoSubmission() throws BackingStoreException, IOException {
-        logger.info("Checking submission status...");
+        logger.info(String.format("[%s]Checking submission status...", processName));
 
 //        Arrays.stream(preferences.keys()).parallel().forEach(userID -> {
 //            try {
@@ -100,14 +100,15 @@ public class RequestProcessor {
             if (name == null) continue;
             String result = connector.checkRecord(name);
             if (result == null || !result.equals("")) continue;
-            logger.info(String.format("Sending Late reminder to %s(%s)", name, userID));
+            logger.info(String.format("[%s]Sending Late reminder to %s(%s)", processName, name, userID));
             sender.sendLateReminder(userID);
         }
-        logger.info("All submission status checks are finished.");
+        logger.info(String.format("[%s]All submission status checks are finished.", processName));
     }
 
     public void processEvent(Event e) throws BackingStoreException, IOException {
         if (e instanceof FollowEvent) {
+            logger.info(String.format("[%s]User %s started to follow the bot", processName, e.getSource().getUserId()));
             sender.sendWelcomeMessage(((FollowEvent) e).getReplyToken());
         } else if (e instanceof MessageEvent) {
             String token = ((MessageEvent<?>) e).getReplyToken();

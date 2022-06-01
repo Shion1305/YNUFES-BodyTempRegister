@@ -36,7 +36,9 @@ public class ProcessorManager {
     }
 
     public static void processEvent(String reqName, Event e) throws BackingStoreException, IOException {
-        processors.get(reqName).processEvent(e);
+        RequestProcessor processor = processors.get(reqName);
+        if (processor != null) processor.processEvent(e);
+        else logger.info("Received unknown event: reqName: " + reqName);
     }
 
     public static void broadcastReminder() {

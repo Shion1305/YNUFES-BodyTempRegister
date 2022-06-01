@@ -17,7 +17,7 @@ public class ConfigManager {
         BOT_CONFIG_JSON
     }
 
-    private final static String configDir = System.getProperty("user.home") + "/ShionServerConfig/YNUFES-Design-BodyTempBot/config.properties";
+    private final static String configDir = System.getProperty("user.home") + "/ShionServerConfig/YNUFES-BodyTempBot/config.properties";
 
     static {
         init();
