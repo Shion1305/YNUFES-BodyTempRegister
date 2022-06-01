@@ -36,3 +36,4 @@ BotToken=(LineMessagingで発行したChannelAccessToken)
 ## 使い方
 Lineチャット上での操作は次の通りです。
 登録に失敗した場合はエラーが表示されます。
+![ScreenShot.png](Screenshot_linebot.png)
