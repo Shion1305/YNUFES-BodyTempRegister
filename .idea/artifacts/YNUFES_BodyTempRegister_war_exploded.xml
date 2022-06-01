@@ -1,14 +1,12 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" build-on-make="true" name="YNUFES-BodyTempRegister-Hensyu:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/YNUFES_BodyTempRegister_Hensyu_war_exploded</output-path>
+  <artifact type="exploded-war" build-on-make="true" name="YNUFES-BodyTempRegister:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/YNUFES_BodyTempRegister_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="YNUFES-BodyTempRegister/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="YNUFES-BodyTempRegister" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="javax.servlet.api" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.13.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.13.3" />
@@ -19,10 +17,7 @@
           <element id="library" level="project" name="Maven: com.linecorp.bot:line-bot-servlet:4.9.0" />
           <element id="library" level="project" name="Maven: com.linecorp.bot:line-bot-api-client:4.9.0" />
           <element id="library" level="project" name="Maven: com.squareup.okhttp3:logging-interceptor:3.14.9" />
-          <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:3.14.9" />
-          <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.17.2" />
           <element id="library" level="project" name="Maven: com.squareup.retrofit2:converter-jackson:2.9.0" />
-          <element id="library" level="project" name="Maven: com.squareup.retrofit2:retrofit:2.9.0" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:30.0-jre" />
           <element id="library" level="project" name="Maven: com.google.guava:failureaccess:1.0.1" />
           <element id="library" level="project" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" />
@@ -31,8 +26,13 @@
           <element id="library" level="project" name="Maven: com.google.j2objc:j2objc-annotations:1.3" />
           <element id="library" level="project" name="Maven: com.linecorp.bot:line-bot-parser:4.9.0" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.36" />
+          <element id="library" level="project" name="Maven: com.squareup.retrofit2:retrofit:2.9.0" />
+          <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:3.14.9" />
+          <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.17.2" />
+          <element id="library" level="project" name="javax.servlet.api" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="YNUFES-BodyTempRegister/web/Web" />
     </root>
   </artifact>
 </component>
