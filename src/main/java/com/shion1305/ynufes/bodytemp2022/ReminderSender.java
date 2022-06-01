@@ -1,7 +1,5 @@
 package com.shion1305.ynufes.bodytemp2022;
 
-import com.shion1305.ynufes.bodytemp2022.message.MessageSender;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -42,7 +40,7 @@ public class ReminderSender implements ServletContextListener {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                MessageSender.broadcastReminder();
+                ProcessorManager.broadcastReminder();
                 logger.info("The scheduled reminder has been broadcasted");
                 schedule();
             }
@@ -64,7 +62,7 @@ public class ReminderSender implements ServletContextListener {
             @Override
             public void run() {
                 try {
-                    UserHandler.checkNoSubmission();
+                    ProcessorManager.checkNoSubmission();
                 } catch (BackingStoreException | IOException e) {
                     throw new RuntimeException(e);
                 }
