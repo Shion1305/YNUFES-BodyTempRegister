@@ -8,16 +8,21 @@ import com.linecorp.bot.model.event.Event;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
 import com.shion1305.ynufes.bodytemp2022.config.JsonConfigManager;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 
-public class ProcessorManager {
+@WebListener
+public class ProcessorManager implements ServletContextListener {
     static Logger logger = Logger.getLogger("ProcessManager");
     static HashMap<String, RequestProcessor> processors = new HashMap<>();
 
-    static {
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
         try {
             init();
         } catch (IOException e) {
@@ -25,13 +30,15 @@ public class ProcessorManager {
         }
     }
 
-    private ProcessorManager() {
-    }
-
-    private static void init() throws IOException {
+    private void init() throws IOException {
         InstanceData[] data = JsonConfigManager.readJson();
+        if (data == null) {
+            logger.info("Json Configuration file loaded, but no profile found.");
+            return;
+        }
         for (InstanceData d : data) {
             processors.put(d.name, new RequestProcessor(d.gasUrl, d.name, d.lineToken));
+            logger.info(String.format("[%s]Process Registered", d.name));
         }
     }
 
