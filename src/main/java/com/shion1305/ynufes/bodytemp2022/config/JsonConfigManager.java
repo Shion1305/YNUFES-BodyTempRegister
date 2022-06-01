@@ -17,7 +17,12 @@ public class JsonConfigManager {
 
     public static InstanceData[] readJson() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        InstanceData[] data = mapper.readValue(new File(ConfigManager.getConfig(ConfigManager.ConfigProperty.BOT_CONFIG_JSON)), InstanceData[].class);
+        String jsonPath = ConfigManager.getConfig(ConfigManager.ConfigProperty.BOT_CONFIG_JSON);
+        if (jsonPath == null) {
+            logger.severe("Configuration Json not specified");
+            return null;
+        }
+        InstanceData[] data = mapper.readValue(new File(jsonPath), InstanceData[].class);
         if (data == null) {
             logger.info("JsonConfig\"" + ConfigManager.getConfig(ConfigManager.ConfigProperty.BOT_CONFIG_JSON) + "\" is not loaded properly");
         } else {
