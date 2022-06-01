@@ -6,7 +6,6 @@ package com.shion1305.ynufes.bodytemp2022;
 
 import com.linecorp.bot.model.event.CallbackRequest;
 import com.linecorp.bot.model.event.Event;
-import com.linecorp.bot.parser.SignatureValidator;
 import com.linecorp.bot.parser.WebhookParseException;
 import com.linecorp.bot.parser.WebhookParser;
 
@@ -25,8 +24,12 @@ public class LineEndpointReceiver extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String url = req.getServletPath();
-        String reqName = url.substring(url.indexOf('/') + 1);
+        String url = req.getPathInfo();
+        if (url.endsWith("/")) {
+            resp.setStatus(400);
+            return;
+        }
+        String reqName = url.substring(url.lastIndexOf('/') + 1);
         WebhookParser parser = new WebhookParser((content, headerSignature) -> true);
         try {
             CallbackRequest request = parser.handle("teset", req.getInputStream().readAllBytes());
