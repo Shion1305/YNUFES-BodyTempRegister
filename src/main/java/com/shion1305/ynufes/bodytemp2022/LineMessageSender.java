@@ -109,7 +109,7 @@ public class LineMessageSender {
                 mes = "不正な形式のメッセージです。テキストメッセージのみ有効です。";
                 break;
             case INVALID_TEMP_FORMAT:
-                mes = "体温の形式に異常を発見しました。";
+                mes = "体温の形式が不正です。正しく入力してください(例: 36.0)";
                 break;
             case SERVER_ERROR:
                 mes = "SpreadSheet側でエラーが発生しました。SpreadSheet側で今日の欄が登録されていない可能性があります。";
@@ -121,7 +121,7 @@ public class LineMessageSender {
             default:
                 mes = "不明のエラーが発生しました。";
         }
-        logger.info(String.format("[%s]ERROR, %s, %s", processName, t.name(), mes));
+        logger.info(String.format("[%s]ERROR, %s", processName, t.name()));
         Text title = createLabel("エラー", true);
         Text content = createLabel(mes, false);
         Box box = Box.builder().contents(title, content).layout(FlexLayout.VERTICAL).build();
