@@ -7,6 +7,7 @@ package com.shion1305.ynufes.bodytemp2022;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.FollowEvent;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 
@@ -108,7 +109,7 @@ public class RequestProcessor {
 
     public void processEvent(Event e) throws BackingStoreException, IOException {
         if (e instanceof FollowEvent) {
-            logger.info(String.format("[%s]User %s started to follow the bot", processName, e.getSource().getUserId()));
+            logger.info(String.format("[%s]User %s started following the bot", processName, e.getSource().getUserId()));
             sender.sendWelcomeMessage(((FollowEvent) e).getReplyToken());
         } else if (e instanceof MessageEvent) {
             String token = ((MessageEvent<?>) e).getReplyToken();
@@ -119,6 +120,11 @@ public class RequestProcessor {
             } else {
                 sender.sendError(LineMessageSender.ErrorType.InvalidFormat, token);
             }
+        } else if (e instanceof UnfollowEvent) {
+            //UnfollowedEventで登録を削除。
+            logger.info(String.format("[%s]User %s unfollowed the bot", processName, e.getSource().getUserId()));
+            preferences.remove(e.getSource().getUserId());
+            preferences.flush();
         }
     }
 
