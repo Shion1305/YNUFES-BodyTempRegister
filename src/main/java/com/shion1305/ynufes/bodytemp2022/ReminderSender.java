@@ -30,6 +30,11 @@ public class ReminderSender implements ServletContextListener {
         scheduleLateReminder();
     }
 
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        timer.purge();
+    }
+
     public static void schedule() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
