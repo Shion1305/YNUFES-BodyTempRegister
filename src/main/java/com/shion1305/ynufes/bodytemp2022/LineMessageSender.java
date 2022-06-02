@@ -43,9 +43,9 @@ public class LineMessageSender {
         }
     }
 
-    private void reply(ReplyMessage message) {
+    private void reply(String replyToken, Message message) {
         try {
-            client.replyMessage(message).get(30, TimeUnit.SECONDS);
+            client.replyMessage(new ReplyMessage(replyToken, message)).get(30, TimeUnit.SECONDS);
         } catch (ExecutionException | TimeoutException | InterruptedException e) {
             logger.severe(String.format("[%s]ERROR in sending Message", processName));
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class LineMessageSender {
 
     public void sendWelcomeMessage(String replyToken) {
         FlexMessage message = standardMessage("体温入力BOTへようこそ", "まずはじめに\nSpreadSheet上に登録されているあなたの名前を入力してください。", "体温入力BOTへようこそ");
-        reply(new ReplyMessage(replyToken, message));
+        reply(replyToken, message);
     }
 
     public void nameSuccess(String name, String token) {
@@ -70,12 +70,12 @@ public class LineMessageSender {
         data.put("名前", name);
         Box mainBox = Box.builder().layout(FlexLayout.VERTICAL)
                 .contents(title, description, listItems(data)).spacing(FlexMarginSize.SM).build();
-        reply(new ReplyMessage(token, FlexMessage.builder()
+        reply(token, FlexMessage.builder()
                 .contents(Bubble.builder().body(mainBox).build())
-                .altText("名前登録完了").build()));
+                .altText("名前登録完了").build());
     }
 
-    public void tempSuccess(String temp, String name, String token) {
+    public void tempSuccess(String temp, String name, String replyToken) {
         Text title = createLabel("体温を登録しました", true);
         Text description = createLabel("以下の内容で登録しました", false);
         Map<String, String> data = new HashMap<>();
@@ -86,7 +86,7 @@ public class LineMessageSender {
                 .contents(title, description, listItems(data)).spacing(FlexMarginSize.SM).build();
         Bubble bubble = Bubble.builder().body(mainBox).build();
         FlexMessage message = FlexMessage.builder().contents(bubble).altText("体温登録成功").build();
-        reply(new ReplyMessage(token, message));
+        reply(replyToken, message);
     }
 
     private Box listItems(Map<String, String> data) {
@@ -127,7 +127,7 @@ public class LineMessageSender {
         Box box = Box.builder().contents(title, content).layout(FlexLayout.VERTICAL).build();
         Bubble b = Bubble.builder().body(box).build();
         FlexMessage message = FlexMessage.builder().contents(b).altText("エラーメッセージ").build();
-        reply(new ReplyMessage(replyToken, message));
+        reply(replyToken, message);
     }
 
     static Text createLabel(String s, boolean bold) {
