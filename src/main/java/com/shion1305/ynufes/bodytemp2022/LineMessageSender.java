@@ -58,14 +58,9 @@ public class LineMessageSender {
 
     public enum ErrorType {InvalidFormat, NAME_NOT_FOUND, INVALID_TEMP_FORMAT, SERVER_ERROR, ERROR_UNKNOWN}
 
-    public void sendWelcomeMessage(String token) {
-        Text title = createLabel("体温入力BOTへようこそ", true);
-        Text description = createLabel("まずはじめに\nSpreadSheet上に登録されているあなたの名前を入力してください。", false);
-        Box mainBox = Box.builder().layout(FlexLayout.VERTICAL)
-                .contents(title, description).spacing(FlexMarginSize.SM).build();
-        reply(new ReplyMessage(token, FlexMessage.builder()
-                .contents(Bubble.builder().body(mainBox).build())
-                .altText("体温入力BOTへようこそ").build()));
+    public void sendWelcomeMessage(String replyToken) {
+        FlexMessage message = standardMessage("体温入力BOTへようこそ", "まずはじめに\nSpreadSheet上に登録されているあなたの名前を入力してください。", "体温入力BOTへようこそ");
+        reply(new ReplyMessage(replyToken, message));
     }
 
     public void nameSuccess(String name, String token) {
@@ -140,31 +135,24 @@ public class LineMessageSender {
     }
 
     public void broadcastReminder() {
-        Box b = Box.builder()
-                .layout(FlexLayout.VERTICAL)
-                .contents(createLabel("検温忘れずに!", true), createLabel("検温しましょう!このチャットに体温を送信してください!(例:36.4)", false)).build();
-        Bubble bubble = Bubble.builder().body(b).build();
-        FlexMessage message = FlexMessage.builder()
-                .contents(bubble)
-                .altText("検温リマインダー")
-                .build();
+        FlexMessage message = standardMessage("検温忘れずに!", "検温しましょう!このチャットに体温を送信してください!(例:36.4)", "検温リマインダー");
         broadcast(message);
         logger.info(String.format("[%s]Reminder broadcasted", processName));
     }
 
-    public void sendLateReminder(String userID) {
+    public FlexMessage standardMessage(String title, String content, String altText) {
         Box b = Box.builder()
                 .layout(FlexLayout.VERTICAL)
-                .spacing(FlexMarginSize.SM)
-                .contents(createLabel("入力を忘れていませんか?", true),
-                        createLabel("検温入力が御済みでないようです!忘れずに入力しましょう!", false))
-                .build();
-        Bubble bubble = Bubble.builder()
-                .body(b)
-                .build();
-        FlexMessage message = FlexMessage.builder()
+                .contents(createLabel(title, true), createLabel(content, false)).build();
+        Bubble bubble = Bubble.builder().body(b).build();
+        return FlexMessage.builder()
                 .contents(bubble)
-                .altText("検温入力忘れていませんか?").build();
+                .altText(altText)
+                .build();
+    }
+
+    public void sendLateReminder(String userID) {
+        FlexMessage message = standardMessage("入力を忘れていませんか?", "検温入力が御済みでないようです!忘れずに入力しましょう!", "検温入力忘れていませんか?");
         push(new PushMessage(userID, message));
     }
 }
