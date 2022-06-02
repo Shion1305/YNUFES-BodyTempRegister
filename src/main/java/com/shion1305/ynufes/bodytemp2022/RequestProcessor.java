@@ -108,23 +108,33 @@ public class RequestProcessor {
     }
 
     public void processEvent(Event e) throws BackingStoreException, IOException {
-        if (e instanceof FollowEvent) {
-            logger.info(String.format("[%s]User %s started following the bot", data.processName, e.getSource().getUserId()));
-            sender.sendWelcomeMessage(((FollowEvent) e).getReplyToken());
-        } else if (e instanceof MessageEvent) {
-            String token = ((MessageEvent<?>) e).getReplyToken();
-            MessageContent mes = ((MessageEvent<?>) e).getMessage();
-            if (mes instanceof TextMessageContent) {
-                String message = ((TextMessageContent) mes).getText();
-                processRequest(message, e.getSource().getUserId(), token);
-            } else {
-                sender.sendError(LineMessageSender.ErrorType.InvalidFormat, token);
-            }
-        } else if (e instanceof UnfollowEvent) {
+        if (e instanceof UnfollowEvent) {
             //UnfollowedEventで登録を削除。
             logger.info(String.format("[%s]User %s unfollowed the bot", data.processName, e.getSource().getUserId()));
             preferences.remove(e.getSource().getUserId());
             preferences.flush();
+            return;
+        }
+        if (data.enabled) {
+            if (e instanceof FollowEvent) {
+                logger.info(String.format("[%s]User %s started following the bot", data.processName, e.getSource().getUserId()));
+                sender.sendWelcomeMessage(((FollowEvent) e).getReplyToken());
+            } else if (e instanceof MessageEvent) {
+                String token = ((MessageEvent<?>) e).getReplyToken();
+                MessageContent mes = ((MessageEvent<?>) e).getMessage();
+                if (mes instanceof TextMessageContent) {
+                    String message = ((TextMessageContent) mes).getText();
+                    processRequest(message, e.getSource().getUserId(), token);
+                } else {
+                    sender.sendError(LineMessageSender.ErrorType.InvalidFormat, token);
+                }
+            }
+        } else {
+            if (e instanceof FollowEvent) {
+                sender.notifyDisabled(((FollowEvent) e).getReplyToken());
+            } else if (e instanceof MessageEvent) {
+                sender.notifyDisabled(((MessageEvent<?>) e).getReplyToken());
+            }
         }
     }
 
