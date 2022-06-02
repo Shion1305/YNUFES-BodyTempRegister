@@ -9,13 +9,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InstanceData {
-    public String name;
+    public String processName;
     public String gasUrl;
     public String lineToken;
+    public boolean enabled;
 
-    public InstanceData(@JsonProperty("name") String name, @JsonProperty("GASUrl") String getGasUrl, @JsonProperty("LineMessagingToken") String token) {
-        this.name = name;
+    public InstanceData(@JsonProperty("name") String name, @JsonProperty("GASUrl") String getGasUrl, @JsonProperty("LineMessagingToken") String token, @JsonProperty("enabled") boolean enabled) {
+        this.processName = name;
         this.gasUrl = getGasUrl;
         this.lineToken = token;
+        this.enabled = enabled;
     }
 }
