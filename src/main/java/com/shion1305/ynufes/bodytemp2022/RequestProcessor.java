@@ -82,6 +82,7 @@ public class RequestProcessor {
     }
 
     public void checkNoSubmission() throws BackingStoreException, IOException {
+        if (!data.enabled) return;
         logger.info(String.format("[%s]Checking submission status...", data.processName));
 
 //        Arrays.stream(preferences.keys()).parallel().forEach(userID -> {
@@ -139,6 +140,7 @@ public class RequestProcessor {
     }
 
     public void broadcastReminder() {
+        if (!data.enabled) return;
         sender.broadcastReminder();
     }
 }
