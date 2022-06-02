@@ -155,4 +155,9 @@ public class LineMessageSender {
         FlexMessage message = standardMessage("入力を忘れていませんか?", "検温入力が御済みでないようです!忘れずに入力しましょう!", "検温入力忘れていませんか?");
         push(new PushMessage(userID, message));
     }
+
+    public void notifyDisabled(String replyToken) {
+        FlexMessage message = standardMessage("稼働停止中", "現在このBOTは無効化されています。詳細は編集部市川までお問い合わせください。", "稼働停止中");
+        reply(replyToken, message);
+    }
 }
