@@ -1,10 +1,12 @@
 [
   {
+    "enabled": true,
     "name": "hensyu",
     "GASUrl": "",
     "LineMessagingToken": ""
   },
   {
+    "enabled": false,
     "name": "keiri",
     "GASUrl": "",
     "LineMessagingToken": ""
