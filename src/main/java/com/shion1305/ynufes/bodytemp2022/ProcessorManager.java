@@ -37,8 +37,8 @@ public class ProcessorManager implements ServletContextListener {
             return;
         }
         for (InstanceData d : data) {
-            processors.put(d.name, new RequestProcessor(d.gasUrl, d.name, d.lineToken));
-            logger.info(String.format("[%s]Process Registered", d.name));
+            processors.put(d.processName, new RequestProcessor(d));
+            logger.info(String.format("[%s]Process Registered", d.processName));
         }
     }
 
