@@ -56,14 +56,19 @@ public class ReminderSender implements ServletContextListener {
         }, d);
     }
 
+    //15時と20時に再度リマインド
     public static void scheduleLateReminder() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour > 20) {
+        if (hour < 15) {
+            calendar.set(Calendar.HOUR_OF_DAY, 15);
+        } else if (hour < 20) {
+            calendar.set(Calendar.HOUR_OF_DAY, 20);
+        } else {
+            calendar.set(Calendar.HOUR_OF_DAY, 15);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR_OF_DAY, 21);
         calendar.set(Calendar.SECOND, 0);
         Date d1 = calendar.getTime();
         logger.info("Late Reminder Scheduled at " + d1);
