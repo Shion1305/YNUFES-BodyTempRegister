@@ -7,9 +7,7 @@ package com.shion1305.ynufes.bodytemp2022;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 
 public class GASConnector {
@@ -52,5 +50,10 @@ public class GASConnector {
         connection.connect();
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(connection.getInputStream(), GasResponse.class);
+    }
+
+    public String[] getListNotResponded() throws IOException {
+        GasResponse response = new ObjectMapper().readValue(new URL(url + "?type=listNotResponded"), GasResponse.class);
+        return response.notResponders;
     }
 }
