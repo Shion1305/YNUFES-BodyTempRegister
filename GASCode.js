@@ -8,24 +8,49 @@ var test1 = {
     }
 };
 
+var test2={
+    "parameter":{
+        "type":"listNotResponded"
+    }
+}
+
 function doGet(e) {
     return process(e);
 }
 
-const c = SpreadsheetApp.getActive().getSheetByName("編集現役");
+const c = SpreadsheetApp.getActive().getSheetByName("シート1");
 
 function process(e) {
+    // If request does not meet requirement, return 400
     if (!checkQualification(e)) return respond({code: 400});
+    const indexD = getRowToday();
+    if (indexD === -1) return respond({code: 500});
+    if (e.parameter.type === "listNotResponded") return listNotResponded(indexD);
     const indexN = checkNameExistance(e.parameter.name);
     if (indexN === -1) return respond({code: 404});
-    const d = new Date(new Date().toLocaleString('ja-JP', {timeZone: 'Asia/Tokyo'}));
-    const indexD = searchRowForDate(d.getMonth() + 1, d.getDate());
-    if (indexD === -1) return respond({code: 500});
     const cell = c.getRange(indexD, indexN + 1);
     const oldV = String(cell.getValue());
     if (e.parameter.type === "check") return respond({currentValue: oldV, code: 200});
     cell.setValue(e.parameter.temp);
     return respond({code: 202, oldValue: oldV});
+}
+
+function getRowToday() {
+    const d = new Date(new Date().toLocaleString('ja-JP', {timeZone: 'Asia/Tokyo'}));
+    return searchRowForDate(d.getMonth() + 1, d.getDate());
+}
+
+function listNotResponded(index) {
+    const sheet = c.getDataRange().getValues();
+    const names = sheet[3];
+    const today = sheet[index];
+    let result = [];
+    for (let i = 1; i < today.length; i++) {
+        if (today[i] === '' || today[i] === null) {
+            result.push(names[i]);
+        }
+    }
+    return respond({code: 200, notResponders: result})
 }
 
 function checkNameExistance(name) {
@@ -51,6 +76,7 @@ function searchRowForDate(month, date) {
 
 function checkQualification(e) {
     if (!e.parameter.type) return false;
+    if (e.parameter.type === "listNotResponded") return true;
     if (e.parameter.type === "check") return e.parameter.name;
     if (e.parameter.type === "register") return e.parameter.name && e.parameter.temp;
     return false;
