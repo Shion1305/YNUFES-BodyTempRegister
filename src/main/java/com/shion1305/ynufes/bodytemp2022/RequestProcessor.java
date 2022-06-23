@@ -11,6 +11,8 @@ import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
+import com.shion1305.ynufes.bodytemp2022.gas.GASConnector;
+import com.shion1305.ynufes.bodytemp2022.gas.GASManager;
 
 import java.io.IOException;
 import java.util.Arrays;
