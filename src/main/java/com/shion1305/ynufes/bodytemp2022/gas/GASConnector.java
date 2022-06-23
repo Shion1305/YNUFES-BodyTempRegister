@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 
 public class GASConnector {
     String url;
+    long cacheTime = 0L;
+    String[] cacheNoSubmission;
+    private static final Logger logger=Logger.getLogger("GASConnector");
 
     GASConnector(String url) {
         this.url = url;
@@ -57,8 +60,18 @@ public class GASConnector {
         return mapper.readValue(connection.getInputStream(), GasResponse.class);
     }
 
-    public String[] getListNotResponded() throws IOException {
+    public String[] getCachedNoSubmission() throws IOException {
+        if (System.currentTimeMillis() - cacheTime < 10000) {
+            return cacheNoSubmission;
+        }
+        return getNoSubmission();
+    }
+
+    public String[] getNoSubmission() throws IOException {
         GasResponse response = new ObjectMapper().readValue(new URL(url + "?type=listNotResponded"), GasResponse.class);
+        cacheTime = System.currentTimeMillis();
+        cacheNoSubmission = response.notResponders;
+        logger.info(String.format("NoSubmissionCheck: %s", Arrays.toString(response.notResponders)));
         return response.notResponders;
     }
 }

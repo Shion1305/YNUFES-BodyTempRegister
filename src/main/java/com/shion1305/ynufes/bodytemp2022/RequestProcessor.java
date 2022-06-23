@@ -87,7 +87,7 @@ public class RequestProcessor {
     public void checkNoSubmission() throws BackingStoreException, IOException {
         if (!data.enabled) return;
         logger.info(String.format("[%s]Checking submission status...", data.processName));
-        String[] nonResponders = connector.getListNotResponded();
+        String[] nonResponders = connector.getCachedNoSubmission();
         for (String userID : preferences.keys()) {
             String name = preferences.get(userID, null);
             if (!Arrays.stream(nonResponders).allMatch(s -> s.equals(name))) continue;
