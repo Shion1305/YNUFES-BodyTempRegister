@@ -121,9 +121,9 @@ public class RequestProcessor {
             }
         } else {
             if (e instanceof FollowEvent) {
-                sender.notifyDisabled(((FollowEvent) e).getReplyToken());
+                sender.warnDisabled(((FollowEvent) e).getReplyToken());
             } else if (e instanceof MessageEvent) {
-                sender.notifyDisabled(((MessageEvent<?>) e).getReplyToken());
+                sender.warnDisabled(((MessageEvent<?>) e).getReplyToken());
             }
         }
     }

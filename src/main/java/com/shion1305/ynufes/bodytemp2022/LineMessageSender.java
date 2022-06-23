@@ -156,7 +156,7 @@ public class LineMessageSender {
         push(new PushMessage(userID, message));
     }
 
-    public void notifyDisabled(String replyToken) {
+    public void warnDisabled(String replyToken) {
         FlexMessage message = standardMessage("稼働停止中", "現在このBOTは無効化されています。詳細は編集部市川までお問い合わせください。", "稼働停止中");
         reply(replyToken, message);
     }
