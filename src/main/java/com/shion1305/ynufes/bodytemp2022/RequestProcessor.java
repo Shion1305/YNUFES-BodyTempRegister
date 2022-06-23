@@ -11,8 +11,11 @@ import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
+import com.shion1305.ynufes.bodytemp2022.gas.GASConnector;
+import com.shion1305.ynufes.bodytemp2022.gas.GASManager;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -27,7 +30,7 @@ public class RequestProcessor {
     public RequestProcessor(InstanceData data) {
         this.logger = Logger.getLogger("RequestProcessor{" + data.processName + "}");
         this.data = data;
-        connector = new GASConnector(data.gasUrl);
+        connector = GASManager.getGASConnector(data.gasUrl);
         preferences = Preferences.userRoot().node("ynufes-bodytemp").node(data.processName);
         sender = new LineMessageSender(data.processName, data.lineToken);
     }
@@ -84,24 +87,10 @@ public class RequestProcessor {
     public void checkNoSubmission() throws BackingStoreException, IOException {
         if (!data.enabled) return;
         logger.info(String.format("[%s]Checking submission status...", data.processName));
-
-//        Arrays.stream(preferences.keys()).parallel().forEach(userID -> {
-//            try {
-//                String name = preferences.get(userID, null);
-//                if (name == null) return;
-//                String result = connector.checkRecord(name);
-//                if (result == null || !result.equals("")) return;
-//                logger.info(String.format("Sending Late reminder to %s(%s)", name, userID));
-//                sender.sendLateReminder(userID);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
+        String[] nonResponders = connector.getCachedNoSubmission();
         for (String userID : preferences.keys()) {
             String name = preferences.get(userID, null);
-            if (name == null) continue;
-            String result = connector.checkRecord(name);
-            if (result == null || !result.equals("")) continue;
+            if (Arrays.stream(nonResponders).noneMatch(s -> s.equals(name))) continue;
             logger.info(String.format("[%s]Sending Late reminder to %s(%s)", data.processName, name, userID));
             sender.sendLateReminder(userID);
         }

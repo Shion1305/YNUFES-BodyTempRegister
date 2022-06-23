@@ -59,7 +59,7 @@ public class LineMessageSender {
     public enum ErrorType {InvalidFormat, NAME_NOT_FOUND, INVALID_TEMP_FORMAT, SERVER_ERROR, ERROR_UNKNOWN}
 
     public void sendWelcomeMessage(String replyToken) {
-        FlexMessage message = standardMessage("体温入力BOTへようこそ", "まずはじめに\nSpreadSheet上に登録されているあなたの名前を入力してください。", "体温入力BOTへようこそ");
+        FlexMessage message = standardMessage("体温入力BOTへようこそ", "まずはじめに\n名前をスペースを入れずに入力してください(例:市川詩恩)", "体温入力BOTへようこそ");
         reply(replyToken, message);
     }
 
@@ -109,13 +109,13 @@ public class LineMessageSender {
                 mes = "不正な形式のメッセージです。テキストメッセージのみ有効です。";
                 break;
             case INVALID_TEMP_FORMAT:
-                mes = "体温の形式が不正です。正しく入力してください(例: 36.0)";
+                mes = "体温の形式が正しくありません。正しく入力してください(例: 36.0)";
                 break;
             case SERVER_ERROR:
-                mes = "SpreadSheet側でエラーが発生しました。SpreadSheet側で今日の欄が登録されていない可能性があります。";
+                mes = "SpreadSheet側でエラーが発生しました。SpreadSheet側で今日の欄が登録されていない可能性があります。編集部市川までご連絡ください。";
                 break;
             case NAME_NOT_FOUND:
-                mes = "入力された名前は見つかりませんでした。SpreadSheet上にある名前と同じ名前を再度入力してください。";
+                mes = "SpreadSheet上で入力された名前は見つかりませんでした。スペースを入れずに名前を入力してください(例:市川詩恩)。解決しない場合は編集部市川まで";
                 break;
             case ERROR_UNKNOWN:
             default:

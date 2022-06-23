@@ -2,20 +2,26 @@
  * Copyright (c) 2022 Shion Ichikawa All Rights Reserved.
  */
 
-package com.shion1305.ynufes.bodytemp2022;
+package com.shion1305.ynufes.bodytemp2022.gas;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class GASConnector {
     String url;
+    long cacheTime = 0L;
+    String[] cacheNoSubmission;
+    private static final Logger logger=Logger.getLogger("GASConnector");
 
-    public GASConnector(String url) {
+    GASConnector(String url) {
         this.url = url;
     }
 
@@ -52,5 +58,20 @@ public class GASConnector {
         connection.connect();
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(connection.getInputStream(), GasResponse.class);
+    }
+
+    public String[] getCachedNoSubmission() throws IOException {
+        if (System.currentTimeMillis() - cacheTime < 10000) {
+            return cacheNoSubmission;
+        }
+        return getNoSubmission();
+    }
+
+    public String[] getNoSubmission() throws IOException {
+        GasResponse response = new ObjectMapper().readValue(new URL(url + "?type=listNotResponded"), GasResponse.class);
+        cacheTime = System.currentTimeMillis();
+        cacheNoSubmission = response.notResponders;
+        logger.info(String.format("NoSubmissionCheck: %s", Arrays.toString(response.notResponders)));
+        return response.notResponders;
     }
 }
