@@ -30,7 +30,7 @@ public class RequestProcessor {
     public RequestProcessor(InstanceData data) {
         this.logger = Logger.getLogger("RequestProcessor{" + data.processName + "}");
         this.data = data;
-        connector = new GASConnector(data.gasUrl);
+        connector = GASManager.getGASConnector(data.gasUrl);
         preferences = Preferences.userRoot().node("ynufes-bodytemp").node(data.processName);
         sender = new LineMessageSender(data.processName, data.lineToken);
     }

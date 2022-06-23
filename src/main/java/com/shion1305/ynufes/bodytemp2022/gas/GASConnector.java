@@ -7,13 +7,18 @@ package com.shion1305.ynufes.bodytemp2022.gas;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class GASConnector {
     String url;
 
-    public GASConnector(String url) {
+    GASConnector(String url) {
         this.url = url;
     }
 
