@@ -90,7 +90,7 @@ public class RequestProcessor {
         String[] nonResponders = connector.getCachedNoSubmission();
         for (String userID : preferences.keys()) {
             String name = preferences.get(userID, null);
-            if (!Arrays.stream(nonResponders).allMatch(s -> s.equals(name))) continue;
+            if (Arrays.stream(nonResponders).noneMatch(s -> s.equals(name))) continue;
             logger.info(String.format("[%s]Sending Late reminder to %s(%s)", data.processName, name, userID));
             sender.sendLateReminder(userID);
         }
