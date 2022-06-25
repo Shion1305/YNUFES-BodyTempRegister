@@ -160,4 +160,14 @@ public class LineMessageSender {
         FlexMessage message = standardMessage("稼働停止中", "現在このBOTは無効化されています。詳細は編集部市川までお問い合わせください。", "稼働停止中");
         reply(replyToken, message);
     }
+
+    public void notifyDisabled() {
+        FlexMessage message = standardMessage("稼働停止しました", "このBOTは無効化されました。\n詳細は編集部市川までお問い合わせください。", "稼働停止通知");
+        broadcast(message);
+    }
+
+    public void notifyEnabled() {
+        FlexMessage message = standardMessage("稼働再開しました", "現在このBOTは有効になりました。\n詳細は編集部市川までお問い合わせください。", "稼働再開通知");
+        broadcast(message);
+    }
 }
