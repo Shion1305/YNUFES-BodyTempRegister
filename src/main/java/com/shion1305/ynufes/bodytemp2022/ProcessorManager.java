@@ -85,4 +85,12 @@ public class ProcessorManager implements ServletContextListener {
             processor.checkNoSubmission();
         }
     }
+
+    public static HashMap<String, Boolean> getConfigurationList() {
+        var r = new HashMap<String, Boolean>();
+        for (var p : processors.values()) {
+            r.put(p.getProcessName(), p.isEnabled());
+        }
+        return r;
+    }
 }

@@ -14,7 +14,7 @@ public class ConfigManager {
     private static Properties config;
 
     public enum ConfigProperty {
-        BOT_CONFIG_JSON
+        BOT_CONFIG_JSON, MAINTENANCE_PASS
     }
 
     private final static String configDir = System.getProperty("user.home") + "/ShionServerConfig/YNUFES-BodyTempBot/config.properties";
@@ -42,6 +42,8 @@ public class ConfigManager {
         switch (property) {
             case BOT_CONFIG_JSON:
                 return getConfig("BotConfigJson");
+            case MAINTENANCE_PASS:
+                return getConfig("MaintenancePass");
             default:
                 return null;
         }

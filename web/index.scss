@@ -1,0 +1,36 @@
+/*!
+ * Copyright (c) 2022 Shion Ichikawa All Rights Reserved.
+ */
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  padding: 1rem;
+  width: 100%;
+  background: linear-gradient(90deg, #0c0140, #030129);
+
+  h1 {
+    color: white;
+    margin: 0;
+  }
+}
+
+#main-frame {
+  padding: 1rem 3rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 50rem;
+}
+
+#status-table {
+  border-collapse: collapse;
+
+  & td, & th {
+    border: 2px solid #0c0140;
+  }
+}

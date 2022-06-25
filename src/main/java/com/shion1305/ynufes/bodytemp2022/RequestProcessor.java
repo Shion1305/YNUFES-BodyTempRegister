@@ -166,4 +166,12 @@ public class RequestProcessor {
         if (!data.enabled) return;
         sender.broadcastReminder();
     }
+
+    public String getProcessName() {
+        return data.processName;
+    }
+
+    public boolean isEnabled() {
+        return data.enabled;
+    }
 }
