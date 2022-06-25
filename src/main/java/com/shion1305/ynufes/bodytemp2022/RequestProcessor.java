@@ -174,4 +174,8 @@ public class RequestProcessor {
     public boolean isEnabled() {
         return data.enabled;
     }
+
+    public long getLineUsage() {
+        return sender.getUsage();
+    }
 }

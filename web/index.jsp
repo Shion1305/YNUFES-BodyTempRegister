@@ -1,6 +1,7 @@
 <%@ page import="com.shion1305.ynufes.bodytemp2022.ProcessorManager" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %><%--
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: shion
   Date: 2022/05/29
@@ -26,15 +27,19 @@
       <tr>
         <th>設定名</th>
         <th>稼働状況</th>
+        <th>Line送信数</th>
       </tr>
-      <% HashMap<String, Boolean> processes = ProcessorManager.getConfigurationList();
-        for (Map.Entry<String, Boolean> p : processes.entrySet()) {%>
+      <% ArrayList<ProcessorManager.StatusData> data = ProcessorManager.getStatusData();
+        for (ProcessorManager.StatusData p : data) {%>
       <tr>
         <td>
-          <%=p.getKey()%>
+          <%=p.processName%>
         </td>
         <td>
-          <%=p.getValue() ? "稼働中" : "停止"%>
+          <%=p.enabled ? "稼働中" : "停止"%>
+        </td>
+        <td>
+          <%=p.usage%>
         </td>
       </tr>
       <% }%>

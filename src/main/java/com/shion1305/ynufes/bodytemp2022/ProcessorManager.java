@@ -12,6 +12,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -86,11 +87,23 @@ public class ProcessorManager implements ServletContextListener {
         }
     }
 
-    public static HashMap<String, Boolean> getConfigurationList() {
-        var r = new HashMap<String, Boolean>();
-        for (var p : processors.values()) {
-            r.put(p.getProcessName(), p.isEnabled());
-        }
+    public static ArrayList<StatusData> getStatusData() {
+        var r = new ArrayList<StatusData>();
+        processors.values().stream().parallel().forEach(p ->
+                r.add(new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage()))
+        );
         return r;
+    }
+
+    public static class StatusData {
+        public String processName;
+        public boolean enabled;
+        public long usage;
+
+        public StatusData(String processName, boolean enabled, long usage) {
+            this.processName = processName;
+            this.enabled = enabled;
+            this.usage = usage;
+        }
     }
 }
