@@ -30,16 +30,42 @@ public class ProcessorManager implements ServletContextListener {
         }
     }
 
-    private void init() throws IOException {
+    private static void init() throws IOException {
         InstanceData[] data = JsonConfigManager.readJson();
-        if (data == null) {
-            logger.info("Json Configuration file loaded, but no profile found.");
-            return;
-        }
+        if (data == null) return;
         for (InstanceData d : data) {
             processors.put(d.processName, new RequestProcessor(d));
             logger.info(String.format("[%s]Process Registered", d.processName));
         }
+    }
+
+
+    /**
+     * 設定の再読み込みを行う。
+     * jsonファイルからボット設定が消去された場合、preferenceは削除されずにインスタンスのみ削除される。
+     * reload処理であるが、reloadableではない(lineTokenが違う)場合は、preferenceが削除され、
+     * インスタンスが再生成される。
+     */
+    static void reload() {
+        InstanceData[] data = JsonConfigManager.readJson();
+        if (data == null) return;
+        var newProcessors = new HashMap<String, RequestProcessor>();
+        for (InstanceData d : data) {
+            if (processors.containsKey(d.processName)) {
+                var process = processors.get(d.processName);
+                if (process.reload(d)) {
+                    newProcessors.put(d.processName, processors.get(d.processName));
+                    logger.info(String.format("[%s]Process Reloaded", d.processName));
+                    continue;
+                } else {
+                    process.clearPreference();
+                }
+            }
+            newProcessors.put(d.processName, new RequestProcessor(d));
+            logger.info(String.format("[%s]Process Registered", d.processName));
+        }
+        processors.clear();
+        processors = newProcessors;
     }
 
     public static void processEvent(String reqName, Event e) throws BackingStoreException, IOException {

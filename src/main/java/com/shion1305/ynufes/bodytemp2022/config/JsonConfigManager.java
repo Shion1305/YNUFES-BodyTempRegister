@@ -15,18 +15,21 @@ public class JsonConfigManager {
     static Logger logger = Logger.getLogger("JsonConfigManager");
 
 
-    public static InstanceData[] readJson() throws IOException {
+    public static InstanceData[] readJson() {
         ObjectMapper mapper = new ObjectMapper();
         String jsonPath = ConfigManager.getConfig(ConfigManager.ConfigProperty.BOT_CONFIG_JSON);
         if (jsonPath == null) {
             logger.severe("Configuration Json not specified");
             return null;
         }
-        InstanceData[] data = mapper.readValue(new File(jsonPath), InstanceData[].class);
-        if (data == null) {
-            logger.info("JsonConfig\"" + ConfigManager.getConfig(ConfigManager.ConfigProperty.BOT_CONFIG_JSON) + "\" is not loaded properly");
-        } else {
-            logger.info("JsonConfigFound");
+        InstanceData[] data;
+        try {
+            if ((data = mapper.readValue(new File(jsonPath), InstanceData[].class)) == null) {
+                logger.info("JsonConfig loaded, but no profile found.");
+            }
+        } catch (IOException e) {
+            logger.warning("JsonConfig\"" + ConfigManager.getConfig(ConfigManager.ConfigProperty.BOT_CONFIG_JSON) + "\" not found");
+            return null;
         }
         return data;
     }
