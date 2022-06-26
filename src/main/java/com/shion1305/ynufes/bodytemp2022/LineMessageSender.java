@@ -112,7 +112,7 @@ public class LineMessageSender {
                 mes = "体温の形式が正しくありません。正しく入力してください(例: 36.0)";
                 break;
             case SERVER_ERROR:
-                mes = "SpreadSheet側でエラーが発生しました。SpreadSheet側で今日の欄が登録されていない可能性があります。編集部市川までご連絡ください。";
+                mes = "SpreadSheet側でエラーが発生しました。\nSpreadSheet側で今日の欄が登録されていない可能性があります。編集部市川までご連絡ください。";
                 break;
             case NAME_NOT_FOUND:
                 mes = "SpreadSheet上で入力された名前は見つかりませんでした。スペースを入れずに名前を入力してください(例:市川詩恩)。解決しない場合は編集部市川まで";
@@ -157,17 +157,17 @@ public class LineMessageSender {
     }
 
     public void warnDisabled(String replyToken) {
-        FlexMessage message = standardMessage("稼働停止中", "現在このBOTは無効化されています。詳細は編集部市川までお問い合わせください。", "稼働停止中");
+        FlexMessage message = standardMessage("稼働停止中", "このBOTは現在稼働停止中です。\n詳細は編集部市川まで", "稼働停止中");
         reply(replyToken, message);
     }
 
     public void notifyDisabled() {
-        FlexMessage message = standardMessage("稼働停止しました", "このBOTは無効化されました。\n詳細は編集部市川までお問い合わせください。", "稼働停止通知");
+        FlexMessage message = standardMessage("稼働停止しました", "このBOTは無効化されました。\n詳細は編集部市川まで", "稼働停止通知");
         broadcast(message);
     }
 
     public void notifyEnabled() {
-        FlexMessage message = standardMessage("稼働再開しました", "現在このBOTは有効になりました。\n詳細は編集部市川までお問い合わせください。", "稼働再開通知");
+        FlexMessage message = standardMessage("稼働再開しました", "このBOTは稼働を再開しました。", "稼働再開通知");
         broadcast(message);
     }
 
