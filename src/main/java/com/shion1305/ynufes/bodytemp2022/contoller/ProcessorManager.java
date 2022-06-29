@@ -87,12 +87,29 @@ public class ProcessorManager implements ServletContextListener {
         }
     }
 
-    public static ArrayList<StatusData> getStatusData() {
-        var r = new ArrayList<StatusData>();
-        processors.values().stream().parallel().forEach(p ->
-                r.add(new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage()))
-        );
-        return r;
+
+    public static class StatusDataManager {
+        private static StatusDataGroup data;
+
+        public synchronized static StatusDataGroup getStatusData() {
+            if (data.time - System.currentTimeMillis() > 3000) {
+                data = new StatusDataGroup();
+                processors.values().stream().parallel().forEach(p ->
+                        data.addStatus(new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage()))
+                );
+                data.time = System.currentTimeMillis();
+            }
+            return data;
+        }
+    }
+
+    public static class StatusDataGroup {
+        public final ArrayList<StatusData> data = new ArrayList<>();
+        long time;
+
+        public void addStatus(StatusData d) {
+            data.add(d);
+        }
     }
 
     public static class StatusData {

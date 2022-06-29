@@ -25,10 +25,10 @@
       <tr>
         <th>設定名</th>
         <th>稼働状況</th>
-        <th>Line送信数</th>
+        <th>Line Quota使用量</th>
       </tr>
-      <% ArrayList<ProcessorManager.StatusData> data = ProcessorManager.getStatusData();
-        for (ProcessorManager.StatusData p : data) {%>
+      <% ProcessorManager.StatusDataGroup dataGroup = ProcessorManager.StatusDataManager.getStatusData();
+        for (ProcessorManager.StatusData p : dataGroup.data) {%>
       <tr>
         <td>
           <%=p.processName%>
