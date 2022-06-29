@@ -55,7 +55,7 @@ public class ProcessorManager implements ServletContextListener {
             if (processors.containsKey(d.processName)) {
                 var process = processors.get(d.processName);
                 if (process.reload(d)) {
-                    newProcessors.put(d.processName, processors.get(d.processName));
+                    newProcessors.put(d.processName, process);
                     logger.info(String.format("[%s]Process Reloaded", d.processName));
                     continue;
                 } else {
