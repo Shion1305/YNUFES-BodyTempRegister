@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Shion Ichikawa All Rights Reserved.
  */
 
-package com.shion1305.ynufes.bodytemp2022;
+package com.shion1305.ynufes.bodytemp2022.contoller;
 
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.FollowEvent;
@@ -13,6 +13,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
 import com.shion1305.ynufes.bodytemp2022.gas.GASConnector;
 import com.shion1305.ynufes.bodytemp2022.gas.GASManager;
+import com.shion1305.ynufes.bodytemp2022.line.LineMessageSender;
 
 import java.io.IOException;
 import java.util.Arrays;

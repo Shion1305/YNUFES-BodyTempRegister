@@ -2,12 +2,13 @@
  * Copyright (c) 2022 Shion Ichikawa All Rights Reserved.
  */
 
-package com.shion1305.ynufes.bodytemp2022;
+package com.shion1305.ynufes.bodytemp2022.line;
 
 import com.linecorp.bot.model.event.CallbackRequest;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.parser.WebhookParseException;
 import com.linecorp.bot.parser.WebhookParser;
+import com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
