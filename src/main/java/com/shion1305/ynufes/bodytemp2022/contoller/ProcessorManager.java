@@ -24,14 +24,10 @@ public class ProcessorManager implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        try {
-            init();
-        } catch (IOException e) {
-            logger.info("Error on initiating ProcessManager");
-        }
+        init();
     }
 
-    private static void init() throws IOException {
+    private static void init() {
         InstanceData[] data = JsonConfigManager.readJson();
         if (data == null) return;
         for (InstanceData d : data) {
