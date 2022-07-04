@@ -25,7 +25,7 @@ public class RequestProcessor {
     private final Logger logger;
     private final Preferences preferences;
     private GASConnector connector;
-    private InstanceData data;
+    private volatile InstanceData data;
     private final LineMessageSender sender;
 
     /**
