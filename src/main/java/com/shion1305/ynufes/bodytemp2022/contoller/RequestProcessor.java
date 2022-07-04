@@ -164,7 +164,7 @@ public class RequestProcessor {
     }
 
     public void broadcastReminder() {
-        if (!data.enabled) return;
+        if (!isEnabled()) return;
         sender.broadcastReminder();
     }
 
