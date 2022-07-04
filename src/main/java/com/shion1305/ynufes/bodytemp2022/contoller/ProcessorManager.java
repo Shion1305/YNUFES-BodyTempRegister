@@ -90,6 +90,7 @@ public class ProcessorManager implements ServletContextListener {
         public synchronized static StatusDataGroup getStatusData() {
             if (data == null || System.currentTimeMillis() - data.time > 3000) {
                 data = updateStatusData();
+                logger.info("UPDATED");
             }
             return data;
         }
