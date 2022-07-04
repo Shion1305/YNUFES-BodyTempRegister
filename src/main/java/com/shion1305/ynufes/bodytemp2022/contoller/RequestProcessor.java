@@ -119,7 +119,7 @@ public class RequestProcessor {
         return true;
     }
 
-    public void checkNoSubmission() throws BackingStoreException, IOException {
+    public synchronized void checkNoSubmission() throws BackingStoreException, IOException {
         if (!data.enabled) return;
         logger.info(String.format("[%s]Checking submission status...", data.processName));
         String[] nonResponders = connector.getCachedNoSubmission();

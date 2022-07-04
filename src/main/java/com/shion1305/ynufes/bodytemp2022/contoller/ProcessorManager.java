@@ -77,7 +77,7 @@ public class ProcessorManager implements ServletContextListener {
         }
     }
 
-    public static void checkNoSubmission() throws BackingStoreException, IOException {
+    public synchronized static void checkNoSubmission() throws BackingStoreException, IOException {
         for (var processor : processors.values()) {
             processor.checkNoSubmission();
         }
