@@ -12,7 +12,7 @@ public class InstanceData {
     public String processName;
     public String gasUrl;
     public String lineToken;
-    public boolean enabled;
+    public volatile boolean enabled;
 
     public InstanceData(@JsonProperty("name") String name, @JsonProperty("GASUrl") String getGasUrl, @JsonProperty("LineMessagingToken") String token, @JsonProperty("enabled") boolean enabled) {
         this.processName = name;
