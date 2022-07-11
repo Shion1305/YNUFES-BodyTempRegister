@@ -52,7 +52,7 @@ public class ProcessorManager implements ServletContextListener {
                 var process = processors.get(d.processName);
                 if (process.reload(d)) {
                     newProcessors.put(d.processName, process);
-                    logger.info(String.format("[%s]Process Reloaded", d.processName));
+                    logger.info(String.format("[%s]Process Reloaded, %b", d.processName, d.enabled));
                     continue;
                 } else {
                     process.clearPreference();
