@@ -67,7 +67,7 @@ public class GASConnector {
         return getNoSubmission();
     }
 
-    public String[] getNoSubmission() throws IOException {
+    public synchronized String[] getNoSubmission() throws IOException {
         GasResponse response = new ObjectMapper().readValue(new URL(url + "?type=listNotResponded"), GasResponse.class);
         cacheTime = System.currentTimeMillis();
         cacheNoSubmission = response.notResponders;

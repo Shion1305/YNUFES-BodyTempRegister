@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Shion Ichikawa All Rights Reserved.
  */
 
-package com.shion1305.ynufes.bodytemp2022;
+package com.shion1305.ynufes.bodytemp2022.contoller;
 
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.FollowEvent;
@@ -13,6 +13,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
 import com.shion1305.ynufes.bodytemp2022.gas.GASConnector;
 import com.shion1305.ynufes.bodytemp2022.gas.GASManager;
+import com.shion1305.ynufes.bodytemp2022.line.LineMessageSender;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,16 +24,25 @@ import java.util.prefs.Preferences;
 public class RequestProcessor {
     private final Logger logger;
     private final Preferences preferences;
-    private final GASConnector connector;
-    private final InstanceData data;
+    private GASConnector connector;
+    private volatile InstanceData data;
     private final LineMessageSender sender;
 
+    /**
+     * InstanceDataのうち以下はfinalとして扱う(変更不可)
+     * processName
+     * lineToken
+     */
     public RequestProcessor(InstanceData data) {
         this.logger = Logger.getLogger("RequestProcessor{" + data.processName + "}");
-        this.data = data;
-        connector = GASManager.getGASConnector(data.gasUrl);
         preferences = Preferences.userRoot().node("ynufes-bodytemp").node(data.processName);
         sender = new LineMessageSender(data.processName, data.lineToken);
+        init(data);
+    }
+
+    private void init(InstanceData data) {
+        this.data = data;
+        connector = GASManager.getGASConnector(data.gasUrl);
     }
 
     public void processRequest(String in, String userId, String token) throws BackingStoreException, IOException {
@@ -84,7 +94,32 @@ public class RequestProcessor {
         }
     }
 
-    public void checkNoSubmission() throws BackingStoreException, IOException {
+
+    public boolean isReloadable(InstanceData d) {
+        return d.lineToken.equals(data.lineToken) && d.processName.equals(data.processName);
+    }
+
+    public void clearPreference() {
+        try {
+            preferences.clear();
+            preferences.flush();
+        } catch (BackingStoreException e) {
+            logger.warning(String.format("[%s]Failed to clear preference", data.processName));
+        }
+    }
+
+    public boolean reload(InstanceData newData) {
+        if (!isReloadable(newData)) return false;
+        if (data.enabled && !newData.enabled) {
+            sender.notifyDisabled();
+        } else if (!data.enabled && newData.enabled) {
+            sender.notifyEnabled();
+        }
+        init(newData);
+        return true;
+    }
+
+    public synchronized void checkNoSubmission() throws BackingStoreException, IOException {
         if (!data.enabled) return;
         logger.info(String.format("[%s]Checking submission status...", data.processName));
         String[] nonResponders = connector.getCachedNoSubmission();
@@ -121,15 +156,27 @@ public class RequestProcessor {
             }
         } else {
             if (e instanceof FollowEvent) {
-                sender.notifyDisabled(((FollowEvent) e).getReplyToken());
+                sender.warnDisabled(((FollowEvent) e).getReplyToken());
             } else if (e instanceof MessageEvent) {
-                sender.notifyDisabled(((MessageEvent<?>) e).getReplyToken());
+                sender.warnDisabled(((MessageEvent<?>) e).getReplyToken());
             }
         }
     }
 
     public void broadcastReminder() {
-        if (!data.enabled) return;
+        if (!isEnabled()) return;
         sender.broadcastReminder();
+    }
+
+    public String getProcessName() {
+        return data.processName;
+    }
+
+    public boolean isEnabled() {
+        return data.enabled;
+    }
+
+    public long getLineUsage() {
+        return sender.getUsage();
     }
 }
