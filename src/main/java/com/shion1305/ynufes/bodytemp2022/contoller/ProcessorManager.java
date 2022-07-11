@@ -52,7 +52,7 @@ public class ProcessorManager implements ServletContextListener {
                 var process = processors.get(d.processName);
                 if (process.reload(d)) {
                     newProcessors.put(d.processName, process);
-                    logger.info(String.format("[%s]Process Reloaded", d.processName));
+                    logger.info(String.format("[%s]Process Reloaded, %b", d.processName, d.enabled));
                     continue;
                 } else {
                     process.clearPreference();
@@ -77,7 +77,7 @@ public class ProcessorManager implements ServletContextListener {
         }
     }
 
-    public static void checkNoSubmission() throws BackingStoreException, IOException {
+    public synchronized static void checkNoSubmission() throws BackingStoreException, IOException {
         for (var processor : processors.values()) {
             processor.checkNoSubmission();
         }
@@ -90,6 +90,7 @@ public class ProcessorManager implements ServletContextListener {
         public synchronized static StatusDataGroup getStatusData() {
             if (data == null || System.currentTimeMillis() - data.time > 3000) {
                 data = updateStatusData();
+                logger.info("UPDATED");
             }
             return data;
         }

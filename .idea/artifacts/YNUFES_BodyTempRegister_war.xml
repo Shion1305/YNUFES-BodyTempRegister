@@ -1,8 +1,9 @@
-  <component name="ArtifactManager">
+<component name="ArtifactManager">
   <artifact type="war" build-on-make="true" name="YNUFES-BodyTempRegister:war">
     <output-path>$PROJECT_DIR$/out/artifacts/YNUFES_BodyTempRegister_war</output-path>
     <root id="archive" name="YNUFES-BodyTempRegister_war.war">
       <element id="artifact" artifact-name="YNUFES-BodyTempRegister:war exploded" />
+      <element id="module-output" name="YNUFES-BodyTempRegister" />
     </root>
   </artifact>
 </component>

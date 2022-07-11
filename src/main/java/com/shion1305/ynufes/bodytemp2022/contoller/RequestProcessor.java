@@ -25,7 +25,7 @@ public class RequestProcessor {
     private final Logger logger;
     private final Preferences preferences;
     private GASConnector connector;
-    private InstanceData data;
+    private volatile InstanceData data;
     private final LineMessageSender sender;
 
     /**
@@ -119,7 +119,7 @@ public class RequestProcessor {
         return true;
     }
 
-    public void checkNoSubmission() throws BackingStoreException, IOException {
+    public synchronized void checkNoSubmission() throws BackingStoreException, IOException {
         if (!data.enabled) return;
         logger.info(String.format("[%s]Checking submission status...", data.processName));
         String[] nonResponders = connector.getCachedNoSubmission();
@@ -164,7 +164,7 @@ public class RequestProcessor {
     }
 
     public void broadcastReminder() {
-        if (!data.enabled) return;
+        if (!isEnabled()) return;
         sender.broadcastReminder();
     }
 
