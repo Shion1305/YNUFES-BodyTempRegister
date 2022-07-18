@@ -8,9 +8,9 @@ var test1 = {
     }
 };
 
-var test2={
-    "parameter":{
-        "type":"listNotResponded"
+var test2 = {
+    "parameter": {
+        "type": "listNotResponded"
     }
 }
 
@@ -43,7 +43,7 @@ function getRowToday() {
 function listNotResponded(index) {
     const sheet = c.getDataRange().getValues();
     const names = sheet[3];
-    const today = sheet[index];
+    const today = sheet[index - 1];
     let result = [];
     for (let i = 1; i < today.length; i++) {
         if (today[i] === '' || today[i] === null) {
