@@ -190,7 +190,8 @@ public class RequestProcessor {
         }
     }
 
-    public GetNumberOfFollowersResponse getNumFollowers(){
-        return sender.getNumFollowers();
+    public void requestNumFollowers(ProcessorManager.StatusData data) {
+        if (!isEnabled()) return;
+        sender.requestNumFollowers(data);
     }
 }
