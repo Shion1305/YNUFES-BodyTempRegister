@@ -88,7 +88,7 @@ public class ProcessorManager implements ServletContextListener {
         private static StatusDataGroup data;
 
         public synchronized static StatusDataGroup getStatusData() {
-            if (data == null || System.currentTimeMillis() - data.time > 3000) {
+            if (data == null || System.currentTimeMillis() - data.time > 60000) {
                 data = updateStatusData();
                 logger.info("UPDATED");
             }
@@ -97,8 +97,11 @@ public class ProcessorManager implements ServletContextListener {
 
         private static StatusDataGroup updateStatusData() {
             StatusDataGroup newData = new StatusDataGroup();
-            processors.values().stream().parallel().forEach(p ->
-                    newData.addStatus(new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage()))
+            processors.values().stream().parallel().forEach(p -> {
+                        StatusData statusData = new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage(), p.getRegisteredNum());
+                        p.requestNumFollowers(statusData);
+                        newData.addStatus(statusData);
+                    }
             );
             newData.time = System.currentTimeMillis();
             return newData;
@@ -118,11 +121,28 @@ public class ProcessorManager implements ServletContextListener {
         public String processName;
         public boolean enabled;
         public long usage;
+        public long registered;
+        public LineNumInfo numFollowers = new LineNumInfo();
 
-        public StatusData(String processName, boolean enabled, long usage) {
+        public StatusData(String processName, boolean enabled, long usage, long registered) {
             this.processName = processName;
             this.enabled = enabled;
             this.usage = usage;
+            this.registered = registered;
+        }
+
+        public static class LineNumInfo {
+            public enum Status {
+                READY,
+                NOT_READY,
+                ERROR,
+                PROCESSING
+            }
+
+            public Status status = Status.PROCESSING;
+            public long followers;
+            public long blockers;
+            public long targetReaches;
         }
     }
 }

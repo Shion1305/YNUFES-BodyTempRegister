@@ -17,9 +17,14 @@ import com.linecorp.bot.model.message.flex.container.Bubble;
 import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
+import com.linecorp.bot.model.response.GetNumberOfFollowersResponse;
+import com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -178,5 +183,25 @@ public class LineMessageSender {
             logger.warning("Failed to get usage data");
             return -1;
         }
+    }
+
+    public void requestNumFollowers(ProcessorManager.StatusData data) {
+        client.getNumberOfFollowers(new SimpleDateFormat("yyyyMMdd").format(Instant.now()
+                        .toEpochMilli()))
+                .whenComplete((num, ex) -> {
+                    if (ex != null) {
+                        logger.warning("Failed to get number of followers");
+                        data.numFollowers.status = ProcessorManager.StatusData.LineNumInfo.Status.ERROR;
+                    } else {
+                        if (num.getStatus().name().equals("READY")) {
+                            data.numFollowers.status = ProcessorManager.StatusData.LineNumInfo.Status.READY;
+                            data.numFollowers.followers = num.getFollowers();
+                            data.numFollowers.blockers = num.getBlocks();
+                            data.numFollowers.targetReaches = num.getTargetedReaches();
+                        } else {
+                            data.numFollowers.status = ProcessorManager.StatusData.LineNumInfo.Status.NOT_READY;
+                        }
+                    }
+                });
     }
 }
