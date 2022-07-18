@@ -17,6 +17,7 @@ import com.linecorp.bot.model.message.flex.container.Bubble;
 import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
+import com.linecorp.bot.model.response.GetNumberOfFollowersResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -177,6 +178,15 @@ public class LineMessageSender {
         } catch (InterruptedException | ExecutionException e) {
             logger.warning("Failed to get usage data");
             return -1;
+        }
+    }
+
+    public GetNumberOfFollowersResponse getNumFollowers(){
+        try{
+            return client.getNumberOfFollowers(new SimpleDateFormat("yyyyMMdd").format(new Date())).get();
+        } catch (ExecutionException | InterruptedException e) {
+            logger.severe("Error in getNumFollowers");
+            return null;
         }
     }
 }
