@@ -25,7 +25,12 @@
       <tr>
         <th>設定名</th>
         <th>稼働状況</th>
+        <th>ユーザー登録数</th>
         <th>Line Quota使用量</th>
+        <th>累積フォロワー数</th>
+        <th>累積ブロック数</th>
+        <th>現在のフォロワー</th>
+        <th>ターゲットリーチ数</th>
       </tr>
       <% ProcessorManager.StatusDataGroup dataGroup = ProcessorManager.StatusDataManager.getStatusData();
         for (ProcessorManager.StatusData p : dataGroup.data) {%>
@@ -37,7 +42,22 @@
           <%=p.enabled ? "稼働中" : "停止"%>
         </td>
         <td>
+          <%=p.registered%>
+        </td>
+        <td>
           <%=p.usage%>
+        </td>
+        <td>
+          <%=p.followerInfo.getFollowers()%>
+        </td>
+        <td>
+          <%=p.followerInfo.getBlocks()%>
+        </td>
+        <td>
+          <%=p.followerInfo.getFollowers() - p.followerInfo.getBlocks()%>
+        </td>
+        <td>
+          <%=p.followerInfo.getTargetedReaches()%>
         </td>
       </tr>
       <% }%>

@@ -10,6 +10,7 @@ import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.MessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.response.GetNumberOfFollowersResponse;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
 import com.shion1305.ynufes.bodytemp2022.gas.GASConnector;
 import com.shion1305.ynufes.bodytemp2022.gas.GASManager;
@@ -183,5 +184,18 @@ public class RequestProcessor {
 
     public long getLineUsage() {
         return sender.getUsage();
+    }
+
+    public long getRegisteredNum() {
+        try {
+            return preferences.keys().length;
+        } catch (BackingStoreException e) {
+            logger.severe("ERROR in getRegisteredNum()");
+            return -1;
+        }
+    }
+
+    public GetNumberOfFollowersResponse getNumFollowers(){
+        return sender.getNumFollowers();
     }
 }

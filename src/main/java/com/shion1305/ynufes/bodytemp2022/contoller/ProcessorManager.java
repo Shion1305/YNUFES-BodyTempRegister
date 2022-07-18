@@ -5,6 +5,7 @@
 package com.shion1305.ynufes.bodytemp2022.contoller;
 
 import com.linecorp.bot.model.event.Event;
+import com.linecorp.bot.model.response.GetNumberOfFollowersResponse;
 import com.shion1305.ynufes.bodytemp2022.config.InstanceData;
 import com.shion1305.ynufes.bodytemp2022.config.JsonConfigManager;
 
@@ -98,7 +99,7 @@ public class ProcessorManager implements ServletContextListener {
         private static StatusDataGroup updateStatusData() {
             StatusDataGroup newData = new StatusDataGroup();
             processors.values().stream().parallel().forEach(p ->
-                    newData.addStatus(new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage()))
+                    newData.addStatus(new StatusData(p.getProcessName(), p.isEnabled(), p.getLineUsage(), p.getRegisteredNum(), p.getNumFollowers()))
             );
             newData.time = System.currentTimeMillis();
             return newData;
@@ -118,11 +119,15 @@ public class ProcessorManager implements ServletContextListener {
         public String processName;
         public boolean enabled;
         public long usage;
+        public long registered;
+        public GetNumberOfFollowersResponse followerInfo;
 
-        public StatusData(String processName, boolean enabled, long usage) {
+        public StatusData(String processName, boolean enabled, long usage, long registered, GetNumberOfFollowersResponse followerInfo) {
             this.processName = processName;
             this.enabled = enabled;
             this.usage = usage;
+            this.registered = registered;
+            this.followerInfo = followerInfo;
         }
     }
 }
