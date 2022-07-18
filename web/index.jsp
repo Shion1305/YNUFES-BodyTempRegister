@@ -1,5 +1,5 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager" %><%--
+<%@ page import="com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager" %>
+<%@ page import="java.util.Comparator" %><%--
   Created by IntelliJ IDEA.
   User: shion
   Date: 2022/05/29
@@ -33,6 +33,7 @@
         <th>ターゲットリーチ数</th>
       </tr>
       <% ProcessorManager.StatusDataGroup dataGroup = ProcessorManager.StatusDataManager.getStatusData();
+        dataGroup.data.sort(Comparator.comparing(o -> o.processName));
         for (ProcessorManager.StatusData p : dataGroup.data) {%>
       <tr>
         <td>
