@@ -48,18 +48,35 @@
         <td>
           <%=p.usage%>
         </td>
+        <% if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.READY) {%>
         <td>
-          <%=p.followerInfo.getFollowers()%>
+          <%=p.numFollowers.followers%>
         </td>
         <td>
-          <%=p.followerInfo.getBlocks()%>
+          <%=p.numFollowers.blockers%>
         </td>
         <td>
-          <%=p.followerInfo.getFollowers() - p.followerInfo.getBlocks()%>
+          <%=p.numFollowers.followers - p.numFollowers.blockers%>
         </td>
         <td>
-          <%=p.followerInfo.getTargetedReaches()%>
+          <%=p.numFollowers.targetReaches%>
         </td>
+        <% } else if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.NOT_READY) {%>
+        <td>利用不可能</td>
+        <td>利用不可能</td>
+        <td>利用不可能</td>
+        <td>利用不可能</td>
+        <% } else if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.PROCESSING) {%>
+        <td>データ取得中</td>
+        <td>データ取得中</td>
+        <td>データ取得中</td>
+        <td>データ取得中</td>
+        <% } else if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.ERROR) {%>
+        <td>エラー</td>
+        <td>エラー</td>
+        <td>エラー</td>
+        <td>エラー</td>
+        <% } %>
       </tr>
       <% }%>
     </table>
