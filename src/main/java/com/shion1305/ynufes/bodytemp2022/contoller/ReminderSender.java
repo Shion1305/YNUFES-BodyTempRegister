@@ -64,6 +64,8 @@ public class ReminderSender implements ServletContextListener {
             calendar.set(Calendar.HOUR_OF_DAY, 15);
         } else if (hour < 20) {
             calendar.set(Calendar.HOUR_OF_DAY, 20);
+        } else  if (hour < 23) {
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
         } else {
             calendar.set(Calendar.HOUR_OF_DAY, 15);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
