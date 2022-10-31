@@ -155,6 +155,11 @@ public class RequestProcessor {
                 }
             }
         } else {
+            if (e instanceof MessageEvent) {
+                MessageContent mes = ((MessageEvent<?>) e).getMessage();
+                if (mes instanceof TextMessageContent)
+                    logger.info(String.format("[%s]Received message from %s, content: %s", data.processName, e.getSource().getUserId(), ((TextMessageContent) mes).getText()));
+            }
             if (e instanceof FollowEvent) {
                 sender.warnDisabled(((FollowEvent) e).getReplyToken());
             } else if (e instanceof MessageEvent) {
