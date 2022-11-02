@@ -25,22 +25,28 @@ public class LineEndpointReceiver extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String url = req.getPathInfo();
-        if (url.endsWith("/")) {
-            resp.setStatus(400);
-            return;
-        }
-        String reqName = url.substring(url.lastIndexOf('/') + 1);
-        WebhookParser parser = new WebhookParser((content, headerSignature) -> true);
         try {
-            CallbackRequest request = parser.handle("teset", req.getInputStream().readAllBytes());
-            List<Event> events = request.getEvents();
-            for (var event : events) {
-                ProcessorManager.processEvent(reqName, event);
+            String url = req.getPathInfo();
+            if (url.endsWith("/")) {
+                resp.setStatus(400);
+                return;
             }
-        } catch (WebhookParseException | BackingStoreException e) {
-            throw new RuntimeException(e);
+            String reqName = url.substring(url.lastIndexOf('/') + 1);
+            WebhookParser parser = new WebhookParser((content, headerSignature) -> true);
+            try {
+                CallbackRequest request = parser.handle("teset", req.getInputStream().readAllBytes());
+                List<Event> events = request.getEvents();
+                for (var event : events) {
+                    ProcessorManager.processEvent(reqName, event);
+                }
+            } catch (WebhookParseException | BackingStoreException e) {
+                throw new RuntimeException(e);
+            }
+            resp.setStatus(200);
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            resp.setStatus(500);
+            throw e;
         }
-        resp.setStatus(200);
     }
 }
