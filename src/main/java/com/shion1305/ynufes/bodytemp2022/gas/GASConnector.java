@@ -19,7 +19,7 @@ public class GASConnector {
     String url;
     long cacheTime = 0L;
     String[] cacheNoSubmission;
-    private static final Logger logger=Logger.getLogger("GASConnector");
+    private static final Logger logger = Logger.getLogger("GASConnector");
 
     GASConnector(String url) {
         this.url = url;
@@ -49,7 +49,12 @@ public class GASConnector {
         requestUrl.append('&');
         requestUrl.append("temp=");
         requestUrl.append(bodyTemp);
-        return sendRequest(requestUrl.toString()).code;
+        try {
+            return sendRequest(requestUrl.toString()).code;
+        } catch (IOException e) {
+            logger.severe("Failed to register");
+            throw e;
+        }
     }
 
     private GasResponse sendRequest(String req) throws IOException {

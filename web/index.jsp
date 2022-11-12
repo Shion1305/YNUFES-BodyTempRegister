@@ -1,5 +1,5 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager" %><%--
+<%@ page import="com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager" %>
+<%@ page import="java.util.Comparator" %><%--
   Created by IntelliJ IDEA.
   User: shion
   Date: 2022/05/29
@@ -25,9 +25,15 @@
       <tr>
         <th>設定名</th>
         <th>稼働状況</th>
+        <th>ユーザー登録数</th>
         <th>Line Quota使用量</th>
+        <th>累積フォロワー数</th>
+        <th>累積ブロック数</th>
+        <th>現在のフォロワー</th>
+        <th>ターゲットリーチ数</th>
       </tr>
       <% ProcessorManager.StatusDataGroup dataGroup = ProcessorManager.StatusDataManager.getStatusData();
+        dataGroup.data.sort(Comparator.comparing(o -> o.processName));
         for (ProcessorManager.StatusData p : dataGroup.data) {%>
       <tr>
         <td>
@@ -37,8 +43,40 @@
           <%=p.enabled ? "稼働中" : "停止"%>
         </td>
         <td>
+          <%=p.registered%>
+        </td>
+        <td>
           <%=p.usage%>
         </td>
+        <% if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.READY) {%>
+        <td>
+          <%=p.numFollowers.followers%>
+        </td>
+        <td>
+          <%=p.numFollowers.blockers%>
+        </td>
+        <td>
+          <%=p.numFollowers.followers - p.numFollowers.blockers%>
+        </td>
+        <td>
+          <%=p.numFollowers.targetReaches%>
+        </td>
+        <% } else if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.NOT_READY) {%>
+        <td>利用不可能</td>
+        <td>利用不可能</td>
+        <td>利用不可能</td>
+        <td>利用不可能</td>
+        <% } else if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.PROCESSING) {%>
+        <td>データ取得中</td>
+        <td>データ取得中</td>
+        <td>データ取得中</td>
+        <td>データ取得中</td>
+        <% } else if (p.numFollowers.status == ProcessorManager.StatusData.LineNumInfo.Status.ERROR) {%>
+        <td>エラー</td>
+        <td>エラー</td>
+        <td>エラー</td>
+        <td>エラー</td>
+        <% } %>
       </tr>
       <% }%>
     </table>
