@@ -10,6 +10,7 @@ import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.StickerMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.FlexComponent;
 import com.linecorp.bot.model.message.flex.component.Text;
@@ -17,14 +18,11 @@ import com.linecorp.bot.model.message.flex.container.Bubble;
 import com.linecorp.bot.model.message.flex.unit.FlexFontSize;
 import com.linecorp.bot.model.message.flex.unit.FlexLayout;
 import com.linecorp.bot.model.message.flex.unit.FlexMarginSize;
-import com.linecorp.bot.model.response.GetNumberOfFollowersResponse;
 import com.shion1305.ynufes.bodytemp2022.contoller.ProcessorManager;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -32,6 +30,7 @@ import java.util.logging.Logger;
 
 public class LineMessageSender {
     private static final Logger logger = Logger.getLogger("MessageSender");
+    private static final Random random = new Random();
     private final String processName;
     private final LineMessagingClient client;
 
@@ -59,6 +58,31 @@ public class LineMessageSender {
 
     private void push(PushMessage message) {
         client.pushMessage(message);
+    }
+
+    public void sendThankYou(String token) {
+        // send Line stamp
+        Message message;
+        switch (random.nextInt(5)) {
+            case 0:
+                message = new StickerMessage("11539", "52114110");
+                break;
+            case 1:
+                message = new StickerMessage("11538", "51626494");
+                break;
+            case 2:
+                message = new StickerMessage("11537", "52002735");
+                break;
+            case 3:
+                message = new StickerMessage("8515", "16581243");
+                break;
+            case 4:
+                message = new StickerMessage("6136", "10551378");
+                break;
+            default:
+                message = new StickerMessage("11539", "52114110");
+        }
+        reply(token, message);
     }
 
     public enum ErrorType {InvalidFormat, NAME_NOT_FOUND, INVALID_TEMP_FORMAT, SERVER_ERROR, ERROR_UNKNOWN}

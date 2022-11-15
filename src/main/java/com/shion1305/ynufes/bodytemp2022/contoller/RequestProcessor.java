@@ -158,8 +158,16 @@ public class RequestProcessor {
         } else {
             if (e instanceof MessageEvent) {
                 MessageContent mes = ((MessageEvent<?>) e).getMessage();
-                if (mes instanceof TextMessageContent)
+                if (mes instanceof TextMessageContent) {
                     logger.info(String.format("[%s]Received message from %s, content: %s", data.processName, e.getSource().getUserId(), ((TextMessageContent) mes).getText()));
+                    String message = ((TextMessageContent) mes).getText();
+                    String token = ((MessageEvent<?>) e).getReplyToken();
+                    if (message.contains("ありがとう") || message.contains("すごい") || message.contains("お疲れ様")) {
+                        sender.sendThankYou(token);
+                        logger.info(String.format("[%s]Received Thank message from %s, content: %s", data.processName, e.getSource().getUserId(), ((TextMessageContent) mes).getText()));
+                        return;
+                    }
+                }
             }
             if (e instanceof FollowEvent) {
                 sender.warnDisabled(((FollowEvent) e).getReplyToken());
